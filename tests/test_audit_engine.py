@@ -79,7 +79,17 @@ class EngineTests(unittest.TestCase):
             'numeric_review': 'checked', 'numeric_evidence': 'Synthetic fixture',
             'original_case': '---', 'enhanced_case': '---', 'evidence': 'Synthetic fixture',
             'checks': {c: 'checked' for c in engine.CHECKS}}]}
+        r['reverse_sweep'] = {'region_ids': [x['id'] for x in reversed(m['regions'])], 'evidence': 'Synthetic fixture'}
+        for region in r['regions'].values():
+            region['inventory_reconciliation'] = {role: {'status': 'verified', 'item_ids': [i['id'] for i in region.get('items', [])], 'evidence': 'Synthetic fixture'} for role in ['original', 'enhanced']}
+            for item in region.get('items', []):
+                item['readings'] = {role: {'literal': item[role], 'status': 'verified', 'character_pass': True, 'evidence': 'Synthetic fixture'} for role in ['original', 'enhanced']}
         engine.write(review, r); self.assertTrue(engine.check(p, review)['complete'])
+        reading = r['regions'][m['regions'][-1]['id']]['items'][0]['readings']['original']
+        reading['status'] = 'unresolved'; engine.write(review, r)
+        self.assertFalse(engine.check(p, review)['full_fidelity_established'])
+        reading['status'] = 'verified'
+
         checks = r['regions'][m['regions'][-1]['id']]['items'][0]['checks']
         checks['case'] = 'different'; engine.write(review, r)
         self.assertFalse(engine.check(p, review)['full_fidelity_established'])

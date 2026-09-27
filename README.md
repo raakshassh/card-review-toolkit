@@ -55,3 +55,7 @@ The proofreader extracts local OCR candidates from both full cards and enlarged 
 Install once: `python -m pip install -r plugins/card-review-toolkit/skills/card-proofreader/requirements-ocr.txt`. Models may download on first use; image processing is local and requires no API key. See the [text inventory workflow](plugins/card-review-toolkit/skills/card-proofreader/references/text-inventory.md). If OCR is unavailable, the audit must disclose its visual transcription fallback. OCR can omit or misread text, so visual coverage remains mandatory.
 
 On the user-supplied Piepi pair, an actual four-pass OCR run took 12.189 seconds and returned 64 candidates, including `DPBP#037` in the original and `DPBP#097` in the enhanced image. Both full-card and footer passes detected that code difference. This measures extraction only, not a complete audit or general recognition accuracy.
+
+## Version 1.3: evidence-based inspection procedure
+
+The proofreader now requires independent character readings for both images, per-region inventory reconciliation and an ordered reverse sweep. Missing evidence blocks completion; unresolved readings block full fidelity. The seven-step protocol explains how to inspect, including matching-OCR verification and added/missing print. These checks validate recorded evidence, not perceptual accuracy. Start a new chat after upgrading.

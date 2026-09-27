@@ -1,0 +1,28 @@
+# Seven-step inspection protocol
+
+1. **Cover the whole card in fixed order.** Confirm geometry, then open every manifest region in order, including overlap, both footer corners and regions that appear to contain only artwork. Preserve the region IDs; do not invent a new crop layout.
+2. **Read independently.** Read and record all visible print in the original before reading the enhanced counterpart. OCR is a candidate list. Never paste one role's transcription into the other, infer a blurred glyph from the other image, or correct text to a familiar sentence. Preserve case, accents, punctuation, line breaks and numeric formatting.
+3. **Inventory the union.** Give each printed occurrence a stable item ID and its location/evidence. Account for lines, isolated words, badges, credits, all numeric fields and symbols. Repeated print requires separate occurrence IDs; overlap of the same occurrence may reuse its ID. Add OCR omissions. An empty transcription means visibly absent print, not an unreadable region. Inspect the expected location on the image where an item is absent.
+4. **Compare exactly.** Run the engine's literal character/token and ordered numeric comparisons. Preserve zeros, signs, decimal separators and prefixes. Do not rely on semantic similarity: `wortkarges` versus `vorlarges` and `DPBP#037` versus `DPBP#097` are differences even if the phrase or card identity seems familiar.
+5. **Verify all characters against pixels.** Read each word letter by letter and every number digit by digit on both images, even when OCR agrees. Check first/middle/final characters and punctuation explicitly. Open native close-ups for small, clipped, ambiguous or suspect print; inspect both footer codes in close-up every time. If a source remains illegible, record uncertainty instead of guessing. Symbols still need their separate inner/outer-shape inspection.
+6. **Reconcile backwards.** Sweep manifest regions in reverse order, from footer to header. On each image compare the visible print to the inventory, adding any omitted occurrence and checking additions/deletions. Record each role's reconciliation independently, including artwork-only regions. Uncertain completeness is unresolved, never verified.
+7. **Gate the verdict.** Run `audit_engine.py check`. Missing protocol evidence blocks completion. Unresolved readings or inventory coverage block full fidelity even if literal strings match. Literal discrepancies require pixel review before becoming confirmed findings. A finished audit can report unresolved evidence but cannot say "all clear." Accuracy takes precedence over the two-minute target.
+
+## Ledger additions (v1.3)
+
+Each text item retains `original` and `enhanced` and adds `readings`:
+
+```json
+{
+  "readings": {
+    "original": {"literal": "DPBP#037", "status": "verified", "character_pass": true, "evidence": "Original native footer crop and location; each digit inspected."},
+    "enhanced": {"literal": "DPBP#097", "status": "verified", "character_pass": true, "evidence": "Enhanced native footer crop and location; each digit inspected."}
+  }
+}
+```
+
+Populate this only after inspection. Allowed reading statuses: `verified`, `absent`, `unresolved`. `literal` must equal that role's transcription. `absent` requires an empty literal and evidence of the corresponding blank location. For unresolved glyphs, retain a descriptive placeholder and specify the uncertainty in evidence. `character_pass: true` records that the pass was performed, not that every glyph was resolved.
+
+Every region adds `inventory_reconciliation`, with `original` and `enhanced` records containing `status: verified|unresolved`, `item_ids` listing all region item IDs (including symbols and counterparts absent in one role), and role-specific `evidence`. Artwork-only regions use empty lists after visual inspection. IDs represent the paired union, not just OCR detections.
+
+Top-level `reverse_sweep` contains `region_ids` in exactly reversed manifest order and `evidence` describing the reconciliation. Old ledgers need actual new inspection; never backfill flags merely to pass validation. These are auditable declarations, not proof that an AI saw every glyph. Do not promise zero missed errors or call a software unit test an image-recognition benchmark.

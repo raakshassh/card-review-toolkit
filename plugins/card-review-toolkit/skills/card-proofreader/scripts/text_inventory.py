@@ -71,6 +71,45 @@ def extract(manifest, output, language="en"):
             'candidates': len(result['candidates']), 'seconds': result['seconds']}
 
 
+def verify_protocol(m, r):
+    """Validate declared visual evidence; cannot certify the reader's perception."""
+    issues, unresolved = [], []
+    region_ids = [x['id'] for x in m['regions']]
+    sweep = r.get('reverse_sweep', {})
+    if sweep.get('region_ids') != list(reversed(region_ids)) or not sweep.get('evidence'):
+        issues.append('Missing ordered bottom-to-top reconciliation sweep.')
+    for rid in region_ids:
+        region = r.get('regions', {}).get(rid, {})
+        items = region.get('items', [])
+        for role in ('original', 'enhanced'):
+            record = region.get('inventory_reconciliation', {}).get(role, {})
+            expected = {i.get('id') for i in items}
+            refs = record.get('item_ids', [])
+            if (record.get('status') not in ('verified', 'unresolved') or not record.get('evidence')
+                    or set(refs) != expected or len(refs) != len(set(refs))):
+                issues.append('Missing/inconsistent independent inventory: '+rid+':'+role)
+            if record.get('status') == 'unresolved':
+                unresolved.append(rid+':'+role+':inventory')
+        for item in items:
+            if item.get('kind') != 'text':
+                continue
+            ident = str(item.get('id'))
+            for role in ('original', 'enhanced'):
+                reading = item.get('readings', {}).get(role, {})
+                status = reading.get('status')
+                if (status not in ('verified', 'absent', 'unresolved') or not reading.get('evidence')
+                        or reading.get('literal') != item.get(role)
+                        or reading.get('character_pass') is not True):
+                    issues.append('Missing independent character reading: '+ident+':'+role)
+                if status == 'absent' and item.get(role) != '':
+                    issues.append('Absent reading has nonempty text: '+ident+':'+role)
+                if status == 'verified' and not item.get(role):
+                    issues.append('Verified reading is empty: '+ident+':'+role)
+                if status == 'unresolved':
+                    unresolved.append(ident+':'+role+':reading')
+    return {'issues': issues, 'unresolved': unresolved}
+
+
 def validate(m, r, directory):
     issues, unresolved, diffs = [], [], []
     items = {}
@@ -115,7 +154,7 @@ def validate(m, r, directory):
             for candidate in data.get('candidates', []):
                 resolution = extraction.get('resolutions', {}).get(candidate['id'], {})
                 refs = resolution.get('item_ids', [])
-                valid = resolution.get('disposition') == 'mapped' and refs and all(x in items for x in refs)
+                valid = bool(resolution.get('disposition') == 'mapped' and refs and all(x in items for x in refs))
                 valid |= resolution.get('disposition') == 'not_printed_text'
                 if not valid or not resolution.get('evidence'):
                     issues.append('Unreconciled OCR candidate: ' + candidate['id'])

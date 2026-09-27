@@ -80,5 +80,35 @@ class TextTests(unittest.TestCase):
         self.assertTrue(inventory.validate({'key': 'x'}, r, '.')['issues'])
 
 
+    def test_zorua_internal_word_change_and_missing_text(self):
+        self.assertFalse(inventory.differences('wortkarges', 'vorlarges')['equal'])
+        self.assertFalse(inventory.differences('Kind.', '')['equal'])
+        self.assertTrue(inventory.differences('wortkarges', 'wortkarges')['equal'])
+
+    def test_protocol_missing_evidence_and_reverse_order(self):
+        m = {'regions': [{'id': 'top'}, {'id': 'bottom'}]}
+        r = {'regions': {rid: {'items': [], 'inventory_reconciliation': {role: {'status': 'verified', 'item_ids': [], 'evidence': 'Fixture inspected'} for role in ['original','enhanced']}} for rid in ['top','bottom']}, 'reverse_sweep': {'region_ids': ['bottom','top'], 'evidence': 'Fixture'}}
+        self.assertFalse(inventory.verify_protocol(m,r)['issues'])
+        r['reverse_sweep']['region_ids'].reverse()
+        self.assertTrue(inventory.verify_protocol(m,r)['issues'])
+        r['reverse_sweep']['region_ids'].reverse()
+        del r['regions']['bottom']['inventory_reconciliation']['original']
+        self.assertTrue(inventory.verify_protocol(m,r)['issues'])
+
+    def test_protocol_requires_both_readings_and_retains_uncertainty(self):
+        m = {'regions': [{'id': 'footer'}]}
+        item = {'id':'code','kind':'text','original':'037','enhanced':'037'}
+        r = {'regions': {'footer': {'items': [item], 'inventory_reconciliation': {role: {'status':'verified','item_ids':['code'],'evidence':'Fixture'} for role in ['original','enhanced']}}}, 'reverse_sweep': {'region_ids':['footer'],'evidence':'Fixture'}}
+        self.assertTrue(inventory.verify_protocol(m,r)['issues'])
+        item['readings'] = {role: {'literal':'037','status':'verified','character_pass':True,'evidence':'Fixture'} for role in ['original','enhanced']}
+        self.assertFalse(inventory.verify_protocol(m,r)['issues'])
+        item['readings']['original']['status']='unresolved'
+        self.assertTrue(inventory.verify_protocol(m,r)['unresolved'])
+        item['readings']['enhanced']['literal']='097'
+        self.assertTrue(inventory.verify_protocol(m,r)['issues'])
+        r['regions']['footer']['inventory_reconciliation']['original']['item_ids']=[]
+        self.assertTrue(inventory.verify_protocol(m,r)['issues'])
+
+
 if __name__ == '__main__':
     unittest.main()

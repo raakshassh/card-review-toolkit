@@ -40,6 +40,10 @@ Make a separate digit-by-digit pass over every numeric occurrence, including bot
 
 Save review evidence in one batch after inspection. Crops generated on disk are not opened or compared automatically. Reuse matching cached preparation rather than recreating it. A cache hit does not establish that a new reviewer has inspected the card, and never transfers findings between different image hashes.
 
+## Required inspection procedure
+
+Follow [the seven-step inspection protocol](references/inspection-protocol.md) on every pair. It explains how to prevent omissions: fixed ordered regions, independent readings, union-of-images inventory, exact comparison, pixel verification even when OCR agrees, a reverse-order reconciliation sweep, and evidence-based completion. Do not replace these steps with an instruction to simply "find all errors." Record the protocol evidence in the existing review ledger. A familiar sentence, a matching OCR result, or several errors already found is never a reason to skip remaining characters. The engine requires independent reading records and region reconciliation; it cannot verify that claimed inspection actually occurred.
+
 ## Separate capitalization pass
 
 After reading the text, compare the case of every letter in readable paired regions or native detail crops, including credits, abbreviations, units, copyright lines, and fine print. Do not limit this pass to headings, proper names, or word initials. Read each word as a sequence of glyphs rather than as a familiar word; preserve deliberate ALL CAPS, lowercase, and mixed case from the original.

@@ -15,7 +15,7 @@ import numpy as np
 import PIL
 from PIL import Image, ImageDraw, ImageOps
 
-VERSION = '1.2.0'
+VERSION = '1.3.0'
 SIZE = (1000, 1400)
 CHECKS = ('characters', 'case', 'marks', 'punctuation_spacing', 'symbols')
 STATUSES = ('checked', 'different', 'unresolved', 'not applicable')
@@ -247,6 +247,9 @@ def check(manifest, review):
         if identity.get('card_id') == 'unresolved':
             unresolved.append(role+':card ID')
     text_report = text_inventory.validate(m, r, out)
+    protocol = text_inventory.verify_protocol(m, r)
+    issues.extend(protocol['issues'])
+    unresolved.extend(protocol['unresolved'])
     issues.extend(text_report['issues'])
     unresolved.extend(text_report['unresolved'])
     differences.extend(x['id'] for x in text_report['literal_differences'])
