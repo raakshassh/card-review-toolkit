@@ -47,3 +47,11 @@ codex plugin add card-review-toolkit@card-review
 ```
 
 Start a new task to pick up the new skill instructions.
+
+## Version 1.2: full text and numeric inventory
+
+The proofreader extracts local OCR candidates from both full cards and enlarged footers, then reconciles them against visually verified literal text. Exact character/token comparisons preserve case, diacritics, punctuation, leading zeros, signs and repeated numbers. A mandatory numeric checklist covers collector IDs, auxiliary footer codes, copyright years, HP/level, measurements, attack text and modifiers. An unresolved reading is never automatically a match.
+
+Install once: `python -m pip install -r plugins/card-review-toolkit/skills/card-proofreader/requirements-ocr.txt`. Models may download on first use; image processing is local and requires no API key. See the [text inventory workflow](plugins/card-review-toolkit/skills/card-proofreader/references/text-inventory.md). If OCR is unavailable, the audit must disclose its visual transcription fallback. OCR can omit or misread text, so visual coverage remains mandatory.
+
+On the user-supplied Piepi pair, an actual four-pass OCR run took 12.189 seconds and returned 64 candidates, including `DPBP#037` in the original and `DPBP#097` in the enhanced image. Both full-card and footer passes detected that code difference. This measures extraction only, not a complete audit or general recognition accuracy.

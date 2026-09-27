@@ -17,3 +17,5 @@ Proofreading does not authorize repairs. Assets are unverified candidates until 
 Python with Pillow and NumPy for local edits and pixel checks; OpenCV when a repair needs registration or inpainting. No separate API key is required by the bundled scripts. Agent usage still follows the host account's limits.
 
 All skill resources are bundled using relative paths. Keep the entire folder together, including the hidden .codex-plugin directory. The ZIP is a plugin source package; extract it before using a local-plugin installation workflow.
+
+The proofreader includes local OCR candidate extraction and exact text/number comparison. Install `skills/card-proofreader/requirements-ocr.txt` once. Initial model downloads may be needed; no card upload or API key is required. OCR output must be visually reconciled, with an explicit fallback when unavailable. Both footer corners and auxiliary codes are mandatory checks.

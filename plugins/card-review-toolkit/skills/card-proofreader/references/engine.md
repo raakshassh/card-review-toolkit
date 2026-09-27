@@ -61,8 +61,12 @@ python scripts/audit_engine.py check MANIFEST REVIEW
 
 `check` checks source/artifact hashes, geometry confirmation, independent IDs, and per-region/item coverage. Nonzero exit means incomplete bookkeeping. It cannot know whether a reviewer overlooked an item, falsely claimed inspection, or misread a letter. An audit with unresolved details may be complete but cannot claim full fidelity.
 
+## Text and numeric completion gate
+
+Follow [text inventory](text-inventory.md) after preparation. Full-card and enlarged-footer OCR candidates must be reconciled to independently verified text items. The checker also requires a numeric category inventory and digit-review evidence. Literal character, token and ordered-number comparisons run even if manually entered statuses say matched. Missing OCR can use the documented explicit visual fallback; missing transcription cannot.
+
 ## Two-minute target
 
-Aim for roughly 20 seconds preparation/geometry, 60 seconds sheet inspection, and 40 seconds targeted details/reporting. These are planning targets, not measured guarantees. Preparation time is reported separately from end-to-end review time. Batch independent image opens and record evidence once. Avoid web lookup, whole-card OCR installation, or icon-library loading during a routine audit unless required by the request. Do not rerun unchanged preparation or inspect unrelated icon candidates.
+Aim for roughly 20 seconds preparation/geometry, 60 seconds sheet inspection, and 40 seconds targeted details/reporting. These are planning targets, not measured guarantees. Preparation time is reported separately from end-to-end review time. Batch independent image opens and record evidence once. Install OCR dependencies once during setup; avoid repeated installation, web lookup or icon-library loading during routine audits. Do not rerun unchanged preparation or inspect unrelated icon candidates.
 
-At two minutes, either finish with a supported verdict or give a brief progress update explaining the remaining detail, then continue. If the user explicitly imposed a hard deadline, return a partial report with pending region IDs. Never convert pending work to checked to meet the clock. OCR is optional if already available, never proof, and is not a dependency of this engine.
+At two minutes, either finish with a supported verdict or give a brief progress update explaining the remaining detail, then continue. If the user explicitly imposed a hard deadline, return a partial report with pending region IDs. Never convert pending work to checked to meet the clock. Run local OCR when available; if unavailable, document the visual extraction fallback. OCR is never proof.

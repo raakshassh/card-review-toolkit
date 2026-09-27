@@ -4,14 +4,18 @@ import hashlib
 import json
 import math
 import time
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import text_inventory
 
 import cv2
 import numpy as np
 import PIL
 from PIL import Image, ImageDraw, ImageOps
 
-VERSION = '1.1.0'
+VERSION = '1.2.0'
 SIZE = (1000, 1400)
 CHECKS = ('characters', 'case', 'marks', 'punctuation_spacing', 'symbols')
 STATUSES = ('checked', 'different', 'unresolved', 'not applicable')
@@ -242,7 +246,12 @@ def check(manifest, review):
     for role, identity in r.get('identity', {}).items():
         if identity.get('card_id') == 'unresolved':
             unresolved.append(role+':card ID')
+    text_report = text_inventory.validate(m, r, out)
+    issues.extend(text_report['issues'])
+    unresolved.extend(text_report['unresolved'])
+    differences.extend(x['id'] for x in text_report['literal_differences'])
     return {'complete': not issues, 'full_fidelity_established': not issues and not unresolved and not differences and not r.get('findings'),
+            'text_comparison': text_report,
             'regions': len(m['regions']), 'unexamined_regions': sorted(set(pending)),
             'unresolved': unresolved, 'different_items': differences, 'issues': issues,
             'note': 'Checks evidence bookkeeping, not whether visual judgments are correct.'}

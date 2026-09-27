@@ -35,3 +35,12 @@ The user-supplied Ledyba pair on 2026-09-24 supports the first case: the photogr
 - An inner artwork contour misses border copyright: reject the outline and lock corrected geometry.
 
 On the available Zorua 189 fixture, manual inspection of the new grid retains the credit case discrepancy, `wortkarges` versus `vorlarges`, and distorted promo lettering. This is a preparation/visibility regression, not an independent blind accuracy evaluation.
+
+## Numeric inventory regression
+
+- Piepi collector `77/130` matches, but auxiliary bottom-left `DPBP#037` becomes `DPBP#097`: report the auxiliary code change, not a collector error.
+- A numeric category or digit-review evidence is missing: incomplete, even when every region is marked opened.
+- A reviewer marks text checked despite unequal literal transcriptions: computed difference still prevents full fidelity.
+- `035` versus `35`, `20+` versus `20`, and repeated `20` occurrences remain distinct.
+- An OCR candidate is omitted from reconciliation, or its evidence hash changes: incomplete.
+- Real OCR on the supplied Piepi pair extracted both code readings in its full and footer passes. Unit tests separately exercise comparator logic; neither is a broad blind accuracy benchmark.

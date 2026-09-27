@@ -69,10 +69,14 @@ class EngineTests(unittest.TestCase):
         self.assertFalse(engine.check(p, review)['complete'])
         r['geometry_confirmed'] = True
         r['identity'] = {role: {'card_id': '189', 'evidence': 'Synthetic fixture identity'} for role in ['original', 'enhanced']}
+        r['text_extraction'] = {'mode': 'visual', 'ocr_unavailable_reason': 'Synthetic unit fixture, no OCR inference', 'visual_sweep_complete': True, 'evidence': 'Synthetic fixture only'}
+        r['numeric_fields'] = {f: {'absent_in_both': True, 'evidence': 'Synthetic fixture only'} for f in engine.text_inventory.FIELDS}
+        r['numeric_fields']['collector_number'] = {'item_ids': ['number'], 'evidence': 'Synthetic footer'}
         for region in m['regions']:
             r['regions'][region['id']] = {'opened': True, 'evidence': 'Synthetic test only', 'no_printed_content': True}
         r['regions'][m['regions'][-1]['id']] = {'opened': True, 'evidence': 'Synthetic footer', 'items': [{
             'id': 'number', 'kind': 'text', 'original': '189', 'enhanced': '189',
+            'numeric_review': 'checked', 'numeric_evidence': 'Synthetic fixture',
             'original_case': '---', 'enhanced_case': '---', 'evidence': 'Synthetic fixture',
             'checks': {c: 'checked' for c in engine.CHECKS}}]}
         engine.write(review, r); self.assertTrue(engine.check(p, review)['complete'])
