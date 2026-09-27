@@ -38,3 +38,7 @@ Run `python scripts/verify_local_edit.py BEFORE AFTER --mask MASK` with Pillow a
 Open the saved output at full-card, native symbol, and enlarged scales. Compare against the original: internal shape, openings, border, alignment, size, spacing to nearby text, alpha fringes, old-symbol residue, background continuity, and every patch boundary. Check each repeated symbol independently. If a preview fails, retry from the clean accepted image rather than stacking patches. Do not claim pixel perfection when the source or candidate cannot support it.
 
 Return the card name/ID, repaired findings, preview or accepted status, direct image link, and material uncertainty. Report verified outside-mask preservation only after running the comparison. Text and font corrections belong to `card-text-repair` when available; do not silently change them during symbol repair.
+
+## Shared audit evidence
+
+When repair follows an audit, reuse its engine manifest and approved finding evidence. Verify the original and latest target hashes; use each finding's native source coordinates, not the rectified sheet coordinates. Do not rerun a whole-card audit to fix an approved item. If an accepted repair changed the target hash, preserve that version and recheck only the relevant donor and repair areas; earlier geometry is a navigation aid, not current pixel evidence. The audit engine is bundled with the companion card-proofreader skill.

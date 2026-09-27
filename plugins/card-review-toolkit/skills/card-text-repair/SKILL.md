@@ -79,3 +79,7 @@ Coordinates, donor choices, and font estimates from an earlier card are not reus
 ## Symbol repairs
 
 For approved printed symbol replacements, use `card-symbol-repair` when available. Pass the original reference, latest accepted output, collector card ID, and approved symbol locations. Its icon library does not establish spelling or font fidelity. Keep text and symbol masks separate, preserve accepted changes between steps, and verify the final output against their bounded union. If unavailable, report that limitation instead of inventing an icon.
+
+## Shared audit evidence
+
+When repair follows an audit, reuse its engine manifest and approved finding evidence. Verify the original and latest target hashes; use each finding's native source coordinates, not the rectified sheet coordinates. Do not rerun a whole-card audit to fix an approved item. If an accepted repair changed the target hash, preserve that version and recheck only the relevant donor and repair areas; earlier geometry is a navigation aid, not current pixel evidence. The audit engine is bundled with the companion card-proofreader skill.

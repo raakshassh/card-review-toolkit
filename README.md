@@ -30,3 +30,20 @@ These are agent-assisted skills, not a standalone automatic detector. Card Revie
 The marketplace is at `.agents/plugins/marketplace.json`, and all plugin resources are under `plugins/card-review-toolkit/`. Keep hidden directories when copying.
 
 See the plugin README for details and the [official packaging documentation](https://developers.openai.com/plugins/build/plugins) for marketplace installation.
+
+## Version 1.1: consistent, faster preparation
+
+The proofreader now uses one bundled engine with fixed overlapping card-relative crops, saved geometry, ordered contact sheets, native-pixel details on demand, hash-verified caching, and a coverage completion check. Start with the default grid; all templates cover the full card. Automatic boundary proposals require visual confirmation.
+
+Install the Python dependencies once: `python -m pip install -r requirements.txt`. The engine lives in `plugins/card-review-toolkit/skills/card-proofreader/scripts/audit_engine.py`; its [workflow guide](plugins/card-review-toolkit/skills/card-proofreader/references/engine.md) explains commands and evidence records.
+
+The routine-audit target is two minutes, not a cutoff or guarantee. A local Zorua fixture prepared in about two seconds and a cached repeat in under 0.1 seconds; those timings exclude AI review, tool latency, geometry correction and reporting. Blurry details can require longer inspection. The bundled tests verify deterministic crops, coverage, cache invalidation, native pixel preservation and completion gates, not model recognition accuracy.
+
+To update an existing installation:
+
+```sh
+codex plugin marketplace upgrade card-review
+codex plugin add card-review-toolkit@card-review
+```
+
+Start a new task to pick up the new skill instructions.

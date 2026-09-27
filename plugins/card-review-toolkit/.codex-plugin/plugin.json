@@ -1,6 +1,6 @@
 {
   "name": "card-review-toolkit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Compare source and enhanced cards, repair text, and restore source-matched symbols.",
   "author": {
     "name": "raakshassh"
@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "Card Review Toolkit",
     "shortDescription": "Proofread cards and repair text and symbols.",
-    "longDescription": "Three coordinated skills for exact card proofreading, localized text repairs, and symbol repairs using 175 candidate icons. Includes source matching, font and background checks, repair previews, and outside-mask pixel verification. Image inspection is agent-assisted, not a standalone automatic detector.",
+    "longDescription": "Three card review and repair skills with a deterministic crop engine, verified preparation cache, coverage checks, font and background checks, and 175 candidate icons. Two-minute audit target; accuracy and runtime depend on source quality and visual inspection.",
     "developerName": "raakshassh",
     "category": "Productivity",
     "capabilities": [
