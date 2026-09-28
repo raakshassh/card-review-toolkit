@@ -42,6 +42,9 @@ Save review evidence in one batch after inspection. Crops generated on disk are 
 
 ## Required inspection procedure
 
+Before inspecting, read [past misses and the glyph inspection method](references/past-misses.md). Apply its top/middle/bottom stroke comparison to current paired words and digits. Historical examples illustrate what can be overlooked; they never supply findings for the current card.
+
+
 Follow [the seven-step inspection protocol](references/inspection-protocol.md) on every pair. It explains how to prevent omissions: fixed ordered regions, independent readings, union-of-images inventory, exact comparison, pixel verification even when OCR agrees, a reverse-order reconciliation sweep, and evidence-based completion. Do not replace these steps with an instruction to simply "find all errors." Record the protocol evidence in the existing review ledger. A familiar sentence, a matching OCR result, or several errors already found is never a reason to skip remaining characters. The engine requires independent reading records and region reconciliation; it cannot verify that claimed inspection actually occurred.
 
 ## Original-to-enhanced typography pass

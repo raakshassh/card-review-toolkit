@@ -50,3 +50,5 @@ Example structure for a visually established change (never prefill without inspe
 ```
 
 A `different` status means a confirmed visual discrepancy, not automatically a different Unicode character or identifiable font family. `unresolved` means the comparison lacks sufficient visual evidence. `not_comparable` is for a verified added/deleted occurrence; explain both locations. The checker exposes these as `typography_flags`; their statuses distinguish differences from concerns. Its full-fidelity gate blocks all three. Matching text or a readable digit must not bypass this pass. These are evidence-record checks, not an automatic font recognizer.
+
+For concrete top/middle/bottom stroke checks and historical confirmed versus user-reported cases, read [past misses](past-misses.md). Apply the method to all current text, including unchanged controls; do not search only for the example words.
