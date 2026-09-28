@@ -63,3 +63,7 @@ The proofreader now requires independent character readings for both images, per
 ## Version 1.4: letter legibility
 
 Per-character blur, merged strokes and unclear glyphs must now be reported separately from confirmed text differences, even if a word can be guessed. Each image reading requires a legibility inspection. Open concerns prevent an all-clear; missing inspection blocks completion. This validates visual review records, not automated blur detection.
+
+## Version 1.5: paired typography checks
+
+Compare each word/digit with its corresponding original occurrence for glyph shape and typography even when OCR matches. Intentional differences between neighbouring words are not findings. Required paired evidence separates confirmed visual changes from unresolved typography concerns. This is an agent visual inspection workflow, not an automatic font classifier.

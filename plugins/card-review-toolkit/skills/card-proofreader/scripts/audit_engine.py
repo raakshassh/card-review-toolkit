@@ -15,7 +15,7 @@ import numpy as np
 import PIL
 from PIL import Image, ImageDraw, ImageOps
 
-VERSION = '1.4.0'
+VERSION = '1.5.0'
 SIZE = (1000, 1400)
 CHECKS = ('characters', 'case', 'marks', 'punctuation_spacing', 'symbols')
 STATUSES = ('checked', 'different', 'unresolved', 'not applicable')
@@ -256,6 +256,7 @@ def check(manifest, review):
     return {'complete': not issues, 'full_fidelity_established': not issues and not unresolved and not differences and not r.get('findings'),
             'text_comparison': text_report,
             'legibility_flags': protocol['legibility_flags'],
+            'typography_flags': protocol['typography_flags'],
             'regions': len(m['regions']), 'unexamined_regions': sorted(set(pending)),
             'unresolved': unresolved, 'different_items': differences, 'issues': issues,
             'note': 'Checks evidence bookkeeping, not whether visual judgments are correct.'}

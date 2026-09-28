@@ -38,3 +38,15 @@ For a concern, add a nonempty `legibility_concerns` array. Each entry needs `loc
 ```
 
 The checker returns `legibility_flags` and blocks full fidelity for any open concern, even if literal strings match and reading status is verified. Missing legibility inspection blocks completion. Valid concern records allow a completed audit with an explicit needs-review verdict. These are reviewer-declared visual observations; this feature is not an automatic blur detector. Never silently populate clear for older reviews without new inspection.
+
+## Paired typography (v1.5)
+
+Each text item requires a `typography` record with `status: matched|different|unresolved|not_comparable`, `original_evidence`, `enhanced_evidence`, and `description`. Evidence must identify the corresponding native crops/locations. Description states the inspected features or the specific visible change. Review every word and digit in the item; subdivide a line when needed to localize a difference. These fields are per paired item, not a comparison with adjacent words.
+
+Example structure for a visually established change (never prefill without inspection):
+
+```json
+{"typography":{"status":"different","original_evidence":"Original native crop: glyph after Nimm","enhanced_evidence":"Enhanced native crop: same glyph","description":"Original appears as a plain vertical stroke; enhanced has an angled top. Character identity is not inferred from this observation."}}
+```
+
+A `different` status means a confirmed visual discrepancy, not automatically a different Unicode character or identifiable font family. `unresolved` means the comparison lacks sufficient visual evidence. `not_comparable` is for a verified added/deleted occurrence; explain both locations. The checker exposes these as `typography_flags`; their statuses distinguish differences from concerns. Its full-fidelity gate blocks all three. Matching text or a readable digit must not bypass this pass. These are evidence-record checks, not an automatic font recognizer.

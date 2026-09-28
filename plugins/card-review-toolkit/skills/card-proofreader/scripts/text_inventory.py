@@ -73,7 +73,7 @@ def extract(manifest, output, language="en"):
 
 def verify_protocol(m, r):
     """Validate declared visual evidence; cannot certify the reader's perception."""
-    issues, unresolved, legibility_flags = [], [], []
+    issues, unresolved, legibility_flags, typography_flags = [], [], [], []
     region_ids = [x['id'] for x in m['regions']]
     sweep = r.get('reverse_sweep', {})
     if sweep.get('region_ids') != list(reversed(region_ids)) or not sweep.get('evidence'):
@@ -94,6 +94,18 @@ def verify_protocol(m, r):
             if item.get('kind') != 'text':
                 continue
             ident = str(item.get('id'))
+            typography = item.get('typography', {})
+            typ_status = typography.get('status')
+            if (typ_status not in ('matched', 'different', 'unresolved', 'not_comparable')
+                    or not typography.get('original_evidence') or not typography.get('enhanced_evidence')
+                    or not typography.get('description')):
+                issues.append('Missing paired typography comparison: '+ident)
+            if typ_status in ('different', 'unresolved', 'not_comparable'):
+                flag = {'item': ident, **typography}
+                if flag not in typography_flags:
+                    typography_flags.append(flag)
+                # Open visual differences/uncertainty prevent an all-clear even if OCR matches.
+                unresolved.append(ident+':typography:'+typ_status)
             for role in ('original', 'enhanced'):
                 reading = item.get('readings', {}).get(role, {})
                 status = reading.get('status')
@@ -123,7 +135,8 @@ def verify_protocol(m, r):
                     issues.append('Verified reading is empty: '+ident+':'+role)
                 if status == 'unresolved':
                     unresolved.append(ident+':'+role+':reading')
-    return {'issues': issues, 'unresolved': unresolved, 'legibility_flags': legibility_flags}
+    return {'issues': issues, 'unresolved': unresolved, 'legibility_flags': legibility_flags,
+            'typography_flags': typography_flags}
 
 
 def validate(m, r, directory):

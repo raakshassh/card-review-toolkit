@@ -16,7 +16,7 @@ Look for differences in printed content only:
 - Printed symbols, icons, logos, energy/cost marks, set/regulation/rarity marks, and their inner shapes and outer borders.
 - Extra or missing marks touching or immediately surrounding a letter, punctuation mark, or printed symbol, such as an added dot above a letter.
 
-Letter-level legibility concerns are a separate required QC category, even without a confirmed text change. Do not flag general artwork, Pokémon anatomy, background patterns, color grading, foil texture, sharpening, blur, or layout differences unless the user explicitly expands this audit. Do not flag a word merely because it looks misspelled; it must visibly differ from the original. Differences caused only by perspective, lighting, compression, antialiasing, or resolution are not confirmed content-change findings. If they obscure a particular character, report that character separately as a legibility concern without attributing its cause.
+Paired typography differences and letter-level legibility concerns are separate required QC categories, even without a confirmed text change. Do not flag general artwork, Pokémon anatomy, background patterns, color grading, foil texture, sharpening, blur, or layout differences unless the user explicitly expands this audit. Do not flag a word merely because it looks misspelled; it must visibly differ from the original. Differences caused only by perspective, lighting, compression, antialiasing, or resolution are not confirmed content-change findings. If they obscure a particular character, report that character separately as a legibility concern without attributing its cause.
 
 ## Bind the current pair
 
@@ -43,6 +43,18 @@ Save review evidence in one batch after inspection. Crops generated on disk are 
 ## Required inspection procedure
 
 Follow [the seven-step inspection protocol](references/inspection-protocol.md) on every pair. It explains how to prevent omissions: fixed ordered regions, independent readings, union-of-images inventory, exact comparison, pixel verification even when OCR agrees, a reverse-order reconciliation sweep, and evidence-based completion. Do not replace these steps with an instruction to simply "find all errors." Record the protocol evidence in the existing review ledger. A familiar sentence, a matching OCR result, or several errors already found is never a reason to skip remaining characters. The engine requires independent reading records and region reconciliation; it cannot verify that claimed inspection actually occurred.
+
+## Original-to-enhanced typography pass
+
+Compare every word and isolated digit with the **same occurrence in the other image**. Check letterform construction, serifs/terminals, stroke weight, slant, width/height proportions, baseline and spacing. Include individual changed glyphs within an otherwise matching word. Equal OCR strings or numeric values never establish a visual match. In particular inspect `1/I/l`, `0/O`, and `rn/m` as shapes without deciding identity from the sentence.
+
+Use paired native crops with surrounding context. Normalize display scale by nearby text height and account for perspective; never treat global enlargement, sharper edges, compression or foil contrast alone as a font substitution. Compare stroke construction and relative proportions, not absolute pixel thickness. Do not flag a word solely because it differs from its neighbours: an intentional source font variation must remain unflagged if reproduced faithfully. Neighbours help judge scale/baseline, but the matching original occurrence is the authority.
+
+For each text item, record `typography` as specified in the inspection protocol. Describe visible differences without inventing an exact font name or editing history. A confirmed shape/style difference is reportable even when spelling and value are unchanged. If source resolution hides the relevant feature, report a typography concern as unresolved. A single image cannot establish a source-to-enhanced font change. For added/deleted text use not_comparable with evidence of both locations and retain the content finding.
+
+User-reported Pixi 3/123 examples: compare `Gehör` directly across the pair, never just with neighbouring words. Inspect the upright glyph after `Nimm`: the supplied native source crop shows a plain vertical stroke, while the enhanced crop has an angled top. Report the supported stroke-shape difference; do not assert `I → 1` solely from OCR or context. Recheck current evidence on every new pair; examples are not prefilled findings.
+
+Report confirmed typography differences separately from spelling/number changes and from blur concerns. Highlight the affected glyph/word on the enhanced image only after paired visual confirmation. Missing typography inspection blocks completion; any open typography difference or uncertainty blocks an unqualified all-clear.
 
 ## Letter-legibility pass
 

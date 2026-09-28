@@ -75,7 +75,7 @@ class EngineTests(unittest.TestCase):
         for region in m['regions']:
             r['regions'][region['id']] = {'opened': True, 'evidence': 'Synthetic test only', 'no_printed_content': True}
         r['regions'][m['regions'][-1]['id']] = {'opened': True, 'evidence': 'Synthetic footer', 'items': [{
-            'id': 'number', 'kind': 'text', 'original': '189', 'enhanced': '189',
+            'id': 'number', 'kind': 'text', 'typography': {'status':'matched','original_evidence':'Synthetic original','enhanced_evidence':'Synthetic enhanced','description':'Synthetic matching glyphs'},  'original': '189', 'enhanced': '189',
             'numeric_review': 'checked', 'numeric_evidence': 'Synthetic fixture',
             'original_case': '---', 'enhanced_case': '---', 'evidence': 'Synthetic fixture',
             'checks': {c: 'checked' for c in engine.CHECKS}}]}

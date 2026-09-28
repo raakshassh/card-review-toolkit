@@ -13,7 +13,7 @@ spec.loader.exec_module(inventory)
 
 class TextTests(unittest.TestCase):
     def fixture(self):
-        item = {'id': 'code', 'kind': 'text', 'original': 'DPBP#037', 'enhanced': 'DPBP#097',
+        item = {'id': 'code', 'kind': 'text', 'typography': {'status':'matched','original_evidence':'Synthetic original','enhanced_evidence':'Synthetic enhanced','description':'Synthetic matching glyphs'},  'original': 'DPBP#037', 'enhanced': 'DPBP#097',
                 'numeric_review': 'different', 'numeric_evidence': 'Synthetic paired footer'}
         r = {'regions': {'footer': {'items': [item]}},
              'text_extraction': {'mode': 'visual', 'ocr_unavailable_reason': 'Test fixture', 'visual_sweep_complete': True, 'evidence': 'Fixture'},
@@ -97,7 +97,7 @@ class TextTests(unittest.TestCase):
 
     def test_protocol_requires_both_readings_and_retains_uncertainty(self):
         m = {'regions': [{'id': 'footer'}]}
-        item = {'id':'code','kind':'text','original':'037','enhanced':'037'}
+        item = {'id':'code','kind':'text','typography': {'status':'matched','original_evidence':'Synthetic original','enhanced_evidence':'Synthetic enhanced','description':'Synthetic matching glyphs'}, 'original':'037','enhanced':'037'}
         r = {'regions': {'footer': {'items': [item], 'inventory_reconciliation': {role: {'status':'verified','item_ids':['code'],'evidence':'Fixture'} for role in ['original','enhanced']}}}, 'reverse_sweep': {'region_ids':['footer'],'evidence':'Fixture'}}
         self.assertTrue(inventory.verify_protocol(m,r)['issues'])
         item['readings'] = {role: {'literal':'037','status':'verified','legibility':'clear','character_pass':True,'evidence':'Fixture'} for role in ['original','enhanced']}
@@ -111,7 +111,7 @@ class TextTests(unittest.TestCase):
 
     def test_blurred_letter_flags_even_when_text_matches(self):
         m = {'regions': [{'id': 'line'}]}
-        item = {'id':'evolution','kind':'text','original':'aus','enhanced':'aus'}
+        item = {'id':'evolution','kind':'text','typography': {'status':'matched','original_evidence':'Synthetic original','enhanced_evidence':'Synthetic enhanced','description':'Synthetic matching glyphs'}, 'original':'aus','enhanced':'aus'}
         item['readings'] = {role: {'literal':'aus','status':'verified','character_pass':True,'legibility':'clear','evidence':'Synthetic fixture'} for role in ['original','enhanced']}
         r = {'regions': {'line': {'items':[item],'inventory_reconciliation':{role:{'status':'verified','item_ids':['evolution'],'evidence':'Fixture'} for role in ['original','enhanced']}}}, 'reverse_sweep':{'region_ids':['line'],'evidence':'Fixture'}}
         self.assertFalse(inventory.verify_protocol(m,r)['issues'])
@@ -125,6 +125,22 @@ class TextTests(unittest.TestCase):
         reading['legibility']='clear'
         self.assertTrue(inventory.verify_protocol(m,r)['issues'])
         del reading['legibility']
+        self.assertTrue(inventory.verify_protocol(m,r)['issues'])
+
+    def test_typography_difference_with_identical_ocr(self):
+        item={'id':'digit','kind':'text','original':'1','enhanced':'1','typography':{'status':'different','original_evidence':'Plain upright stroke fixture','enhanced_evidence':'Angled top fixture','description':'Different terminal shape'}}
+        item['readings']={role:{'literal':'1','status':'verified','character_pass':True,'legibility':'clear','evidence':'Fixture'} for role in ['original','enhanced']}
+        m={'regions':[{'id':'line'}]}
+        r={'regions':{'line':{'items':[item],'inventory_reconciliation':{role:{'status':'verified','item_ids':['digit'],'evidence':'Fixture'} for role in ['original','enhanced']}}},'reverse_sweep':{'region_ids':['line'],'evidence':'Fixture'}}
+        result=inventory.verify_protocol(m,r)
+        self.assertFalse(result['issues'])
+        self.assertTrue(result['unresolved'])
+        self.assertEqual(result['typography_flags'][0]['status'],'different')
+        item['typography']['status']='matched'
+        self.assertFalse(inventory.verify_protocol(m,r)['typography_flags'])
+        item['typography']['status']='unresolved'
+        self.assertTrue(inventory.verify_protocol(m,r)['unresolved'])
+        del item['typography']['original_evidence']
         self.assertTrue(inventory.verify_protocol(m,r)['issues'])
 
 if __name__ == '__main__':
