@@ -69,6 +69,8 @@ Record each role's `legibility: clear|concern|absent` under its existing reading
 
 ## Separate capitalization pass
 
+Before clearing punctuation, follow [the punctuation close-up procedure](references/punctuation.md). Inventory each occurrence from both images; inspect count, baseline height, curl/tail direction and word-relative placement, including opening AND closing quotes. A matching OCR punctuation sequence is not a visual match. Keep unclear tiny marks unresolved.
+
 After reading the text, compare the case of every letter in readable paired regions or native detail crops, including credits, abbreviations, units, copyright lines, and fine print. Do not limit this pass to headings, proper names, or word initials. Read each word as a sequence of glyphs rather than as a familiar word; preserve deliberate ALL CAPS, lowercase, and mixed case from the original.
 
 For each text region, record the case pattern of each word in both images (`U` = uppercase, `l` = lowercase, `-` = nonletter, `?` = unresolved). For example, `Illus.` is `Ullll-`, while `illus.` is `lllll-`. Derive each pattern from that image's visible glyphs, then cross-check it against the literal transcription. Patterns computed only from already-normalized OCR do not verify image case. Inspect every letter, even when both pattern strings initially agree.

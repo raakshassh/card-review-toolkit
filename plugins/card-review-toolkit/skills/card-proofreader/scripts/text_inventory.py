@@ -6,6 +6,7 @@ import importlib.metadata
 import json
 import re
 import time
+import unicodedata
 from pathlib import Path
 
 FIELDS = ('collector_number', 'other_footer_codes', 'copyright_year',
@@ -21,6 +22,13 @@ def numbers(text):
     return re.findall(r'[+âˆ’-]?\d+(?:[.,/]\d+)*(?:[+Ã—x%])?', text)
 
 
+def punctuation(text):
+    """Literal punctuation, not OCR-derived proof of the printed mark's shape."""
+    return [{'index': i, 'character': c, 'codepoint': f'U+{ord(c):04X}',
+             'name': unicodedata.name(c, 'UNNAMED')}
+            for i, c in enumerate(text) if unicodedata.category(c).startswith('P')]
+
+
 def differences(a, b):
     def edits(left, right):
         return [{'operation': op, 'original': left[i:j], 'enhanced': right[k:l],
@@ -30,7 +38,10 @@ def differences(a, b):
     return {'equal': a == b, 'characters': edits(a, b),
             'tokens': edits(re.findall(r'\s+|\w+|[^\w\s]', a), re.findall(r'\s+|\w+|[^\w\s]', b)),
             'original_numbers': numbers(a), 'enhanced_numbers': numbers(b),
-            'numbers_equal': numbers(a) == numbers(b)}
+            'numbers_equal': numbers(a) == numbers(b),
+            'original_punctuation': punctuation(a), 'enhanced_punctuation': punctuation(b),
+            'punctuation_sequence_equal': [x['character'] for x in punctuation(a)] ==
+                                          [x['character'] for x in punctuation(b)]}
 
 
 def extract(manifest, output, language="en"):

@@ -12,6 +12,18 @@ spec.loader.exec_module(inventory)
 
 
 class TextTests(unittest.TestCase):
+    def test_quote_orientation_is_not_normalized(self):
+        result = inventory.differences('Bei „Zahl” endet', 'Bei „Zahl“ endet')
+        self.assertFalse(result['punctuation_sequence_equal'])
+        self.assertEqual(result['original_punctuation'][-1]['codepoint'], 'U+201D')
+        self.assertEqual(result['enhanced_punctuation'][-1]['codepoint'], 'U+201C')
+        self.assertEqual(result['original_punctuation'][-1]['index'], 9)
+
+    def test_punctuation_variants_and_unchanged_control(self):
+        for a, b in [('„a“', '"a"'), ('a,', 'a.'), ('a:', 'a;'), ('a.', 'a'), ('“', '‘')]:
+            self.assertFalse(inventory.differences(a,b)['punctuation_sequence_equal'])
+        self.assertTrue(inventory.differences('Bei „Zahl“.', 'Bei „Zahl“.')['punctuation_sequence_equal'])
+
     def fixture(self):
         item = {'id': 'code', 'kind': 'text', 'typography': {'status':'matched','original_evidence':'Synthetic original','enhanced_evidence':'Synthetic enhanced','description':'Synthetic matching glyphs'},  'original': 'DPBP#037', 'enhanced': 'DPBP#097',
                 'numeric_review': 'different', 'numeric_evidence': 'Synthetic paired footer'}
