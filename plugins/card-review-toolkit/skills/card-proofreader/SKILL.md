@@ -16,7 +16,7 @@ Look for differences in printed content only:
 - Printed symbols, icons, logos, energy/cost marks, set/regulation/rarity marks, and their inner shapes and outer borders.
 - Extra or missing marks touching or immediately surrounding a letter, punctuation mark, or printed symbol, such as an added dot above a letter.
 
-Do not flag general artwork, Pokémon anatomy, background patterns, color grading, foil texture, sharpening, blur, or layout differences unless the user explicitly expands this audit. Do not flag a word merely because it looks misspelled; it must visibly differ from the original. Differences caused only by perspective, lighting, compression, antialiasing, or resolution are not findings.
+Letter-level legibility concerns are a separate required QC category, even without a confirmed text change. Do not flag general artwork, Pokémon anatomy, background patterns, color grading, foil texture, sharpening, blur, or layout differences unless the user explicitly expands this audit. Do not flag a word merely because it looks misspelled; it must visibly differ from the original. Differences caused only by perspective, lighting, compression, antialiasing, or resolution are not confirmed content-change findings. If they obscure a particular character, report that character separately as a legibility concern without attributing its cause.
 
 ## Bind the current pair
 
@@ -43,6 +43,14 @@ Save review evidence in one batch after inspection. Crops generated on disk are 
 ## Required inspection procedure
 
 Follow [the seven-step inspection protocol](references/inspection-protocol.md) on every pair. It explains how to prevent omissions: fixed ordered regions, independent readings, union-of-images inventory, exact comparison, pixel verification even when OCR agrees, a reverse-order reconciliation sweep, and evidence-based completion. Do not replace these steps with an instruction to simply "find all errors." Record the protocol evidence in the existing review ledger. A familiar sentence, a matching OCR result, or several errors already found is never a reason to skip remaining characters. The engine requires independent reading records and region reconciliation; it cannot verify that claimed inspection actually occurred.
+
+## Letter-legibility pass
+
+Inspect every letter and digit for local blur, smearing, merged strokes, filled counters, broken strokes, clipping or glare that makes its shape less clear than neighboring characters. Flag even a partially blurred character that remains guessable from its word. Do not clear it merely because OCR returns a plausible word or both transcriptions match. This is a legibility concern, not automatically a spelling error.
+
+Identify the image role, word, character position, observed defect and native crop/coordinates. Inspect native pixels plus nearest-neighbor enlargement; do not invent missing strokes through sharpening. For example, a concern about the `a` in `aus` should say "evolution line, aus, character 1: a appears blurred/unclear; verify from a sharper image." Treat the user's Porygon2 screenshot as a reported example, not proof that a source-to-enhanced change occurred. A single image can support a legibility concern; it cannot establish when the defect was introduced. If no collector number is visible, report card ID unresolved.
+
+Record each role's `legibility: clear|concern|absent` under its existing reading, with `legibility_concerns` for flagged characters as specified in the inspection protocol. If the literal character cannot be independently identified, also use `status: unresolved`. A verified transcription can still have a legibility concern. Any open concern blocks an unqualified all-clear. Report these under "Legibility concerns" separately from confirmed differences and offer a sharper-source/manual review, not an invented correction. Broad artistic blur or harmless antialiasing with clearly distinguishable glyphs is not a character defect.
 
 ## Separate capitalization pass
 

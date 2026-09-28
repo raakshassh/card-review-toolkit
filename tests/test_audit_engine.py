@@ -83,7 +83,7 @@ class EngineTests(unittest.TestCase):
         for region in r['regions'].values():
             region['inventory_reconciliation'] = {role: {'status': 'verified', 'item_ids': [i['id'] for i in region.get('items', [])], 'evidence': 'Synthetic fixture'} for role in ['original', 'enhanced']}
             for item in region.get('items', []):
-                item['readings'] = {role: {'literal': item[role], 'status': 'verified', 'character_pass': True, 'evidence': 'Synthetic fixture'} for role in ['original', 'enhanced']}
+                item['readings'] = {role: {'literal': item[role], 'status': 'verified', 'legibility': 'clear', 'character_pass': True, 'evidence': 'Synthetic fixture'} for role in ['original', 'enhanced']}
         engine.write(review, r); self.assertTrue(engine.check(p, review)['complete'])
         reading = r['regions'][m['regions'][-1]['id']]['items'][0]['readings']['original']
         reading['status'] = 'unresolved'; engine.write(review, r)

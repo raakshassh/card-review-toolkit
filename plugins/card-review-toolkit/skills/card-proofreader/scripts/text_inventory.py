@@ -73,7 +73,7 @@ def extract(manifest, output, language="en"):
 
 def verify_protocol(m, r):
     """Validate declared visual evidence; cannot certify the reader's perception."""
-    issues, unresolved = [], []
+    issues, unresolved, legibility_flags = [], [], []
     region_ids = [x['id'] for x in m['regions']]
     sweep = r.get('reverse_sweep', {})
     if sweep.get('region_ids') != list(reversed(region_ids)) or not sweep.get('evidence'):
@@ -97,6 +97,22 @@ def verify_protocol(m, r):
             for role in ('original', 'enhanced'):
                 reading = item.get('readings', {}).get(role, {})
                 status = reading.get('status')
+                legibility = reading.get('legibility')
+                if legibility not in ('clear', 'concern', 'absent'):
+                    issues.append('Missing letter-legibility inspection: '+ident+':'+role)
+                if (legibility == 'absent') != (status == 'absent'):
+                    issues.append('Inconsistent absent/legibility status: '+ident+':'+role)
+                concerns = reading.get('legibility_concerns', [])
+                if legibility == 'concern' or concerns:
+                    unresolved.append(ident+':'+role+':legibility')
+                    if legibility != 'concern' or not concerns:
+                        issues.append('Incomplete legibility concern: '+ident+':'+role)
+                    for concern in concerns:
+                        if not all(concern.get(k) for k in ('location', 'description', 'evidence')):
+                            issues.append('Missing legibility location/evidence: '+ident+':'+role)
+                        flag = {'item': ident, 'role': role, **concern}
+                        if flag not in legibility_flags:
+                            legibility_flags.append(flag)
                 if (status not in ('verified', 'absent', 'unresolved') or not reading.get('evidence')
                         or reading.get('literal') != item.get(role)
                         or reading.get('character_pass') is not True):
@@ -107,7 +123,7 @@ def verify_protocol(m, r):
                     issues.append('Verified reading is empty: '+ident+':'+role)
                 if status == 'unresolved':
                     unresolved.append(ident+':'+role+':reading')
-    return {'issues': issues, 'unresolved': unresolved}
+    return {'issues': issues, 'unresolved': unresolved, 'legibility_flags': legibility_flags}
 
 
 def validate(m, r, directory):

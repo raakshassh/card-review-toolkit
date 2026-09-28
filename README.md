@@ -59,3 +59,7 @@ On the user-supplied Piepi pair, an actual four-pass OCR run took 12.189 seconds
 ## Version 1.3: evidence-based inspection procedure
 
 The proofreader now requires independent character readings for both images, per-region inventory reconciliation and an ordered reverse sweep. Missing evidence blocks completion; unresolved readings block full fidelity. The seven-step protocol explains how to inspect, including matching-OCR verification and added/missing print. These checks validate recorded evidence, not perceptual accuracy. Start a new chat after upgrading.
+
+## Version 1.4: letter legibility
+
+Per-character blur, merged strokes and unclear glyphs must now be reported separately from confirmed text differences, even if a word can be guessed. Each image reading requires a legibility inspection. Open concerns prevent an all-clear; missing inspection blocks completion. This validates visual review records, not automated blur detection.

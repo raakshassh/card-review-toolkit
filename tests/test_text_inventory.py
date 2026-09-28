@@ -100,7 +100,7 @@ class TextTests(unittest.TestCase):
         item = {'id':'code','kind':'text','original':'037','enhanced':'037'}
         r = {'regions': {'footer': {'items': [item], 'inventory_reconciliation': {role: {'status':'verified','item_ids':['code'],'evidence':'Fixture'} for role in ['original','enhanced']}}}, 'reverse_sweep': {'region_ids':['footer'],'evidence':'Fixture'}}
         self.assertTrue(inventory.verify_protocol(m,r)['issues'])
-        item['readings'] = {role: {'literal':'037','status':'verified','character_pass':True,'evidence':'Fixture'} for role in ['original','enhanced']}
+        item['readings'] = {role: {'literal':'037','status':'verified','legibility':'clear','character_pass':True,'evidence':'Fixture'} for role in ['original','enhanced']}
         self.assertFalse(inventory.verify_protocol(m,r)['issues'])
         item['readings']['original']['status']='unresolved'
         self.assertTrue(inventory.verify_protocol(m,r)['unresolved'])
@@ -109,6 +109,23 @@ class TextTests(unittest.TestCase):
         r['regions']['footer']['inventory_reconciliation']['original']['item_ids']=[]
         self.assertTrue(inventory.verify_protocol(m,r)['issues'])
 
+    def test_blurred_letter_flags_even_when_text_matches(self):
+        m = {'regions': [{'id': 'line'}]}
+        item = {'id':'evolution','kind':'text','original':'aus','enhanced':'aus'}
+        item['readings'] = {role: {'literal':'aus','status':'verified','character_pass':True,'legibility':'clear','evidence':'Synthetic fixture'} for role in ['original','enhanced']}
+        r = {'regions': {'line': {'items':[item],'inventory_reconciliation':{role:{'status':'verified','item_ids':['evolution'],'evidence':'Fixture'} for role in ['original','enhanced']}}}, 'reverse_sweep':{'region_ids':['line'],'evidence':'Fixture'}}
+        self.assertFalse(inventory.verify_protocol(m,r)['issues'])
+        reading=item['readings']['enhanced']
+        reading['legibility']='concern'
+        reading['legibility_concerns']=[{'location':'aus character 1','description':'Blurred inner counter','evidence':'Synthetic native crop'}]
+        result=inventory.verify_protocol(m,r)
+        self.assertFalse(result['issues'])
+        self.assertTrue(result['unresolved'])
+        self.assertEqual(len(result['legibility_flags']),1)
+        reading['legibility']='clear'
+        self.assertTrue(inventory.verify_protocol(m,r)['issues'])
+        del reading['legibility']
+        self.assertTrue(inventory.verify_protocol(m,r)['issues'])
 
 if __name__ == '__main__':
     unittest.main()

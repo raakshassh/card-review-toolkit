@@ -26,3 +26,15 @@ Populate this only after inspection. Allowed reading statuses: `verified`, `abse
 Every region adds `inventory_reconciliation`, with `original` and `enhanced` records containing `status: verified|unresolved`, `item_ids` listing all region item IDs (including symbols and counterparts absent in one role), and role-specific `evidence`. Artwork-only regions use empty lists after visual inspection. IDs represent the paired union, not just OCR detections.
 
 Top-level `reverse_sweep` contains `region_ids` in exactly reversed manifest order and `evidence` describing the reconciliation. Old ledgers need actual new inspection; never backfill flags merely to pass validation. These are auditable declarations, not proof that an AI saw every glyph. Do not promise zero missed errors or call a software unit test an image-recognition benchmark.
+
+## Letter legibility (v1.4)
+
+Every role's text reading also requires `legibility: clear|concern|absent`. Use `absent` only with reading status `absent`. Inspect native pixels before setting clear; equal OCR/literal readings do not establish sharp or distinguishable glyphs. Flag a locally blurred/merged/clipped character even when its identity remains readable. If identity itself is uncertain, reading status must also be unresolved.
+
+For a concern, add a nonempty `legibility_concerns` array. Each entry needs `location` (word plus character position, or crop coordinates), `description` (what is visually obscured), and `evidence` (native crop/coordinates inspected). Example schema, not preverified evidence:
+
+```json
+{"legibility":"concern","legibility_concerns":[{"location":"evolution line: aus, character 1 (a)","description":"Local blur makes the inner counter indistinct.","evidence":"Path to the inspected native crop and its coordinates"}]}
+```
+
+The checker returns `legibility_flags` and blocks full fidelity for any open concern, even if literal strings match and reading status is verified. Missing legibility inspection blocks completion. Valid concern records allow a completed audit with an explicit needs-review verdict. These are reviewer-declared visual observations; this feature is not an automatic blur detector. Never silently populate clear for older reviews without new inspection.
