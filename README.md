@@ -1,6 +1,19 @@
 # Card Review Toolkit
 
+**Latest published version: 1.5.1.** [Release and ZIP download](https://github.com/raakshassh/card-review-toolkit/releases/tag/v1.5.1).
+
 One Codex plugin containing card-proofreader, card-text-repair, and card-symbol-repair with 175 candidate icon assets.
+
+Version 1.5.1 includes the full text/numeric inventory, legibility checks, source-to-enhanced typography inspection, and historical missed-error examples. Typography inspection remains agent-assisted; the experimental automatic shape detector is not included.
+
+Already installed? Refresh the marketplace and reinstall, then start a new chat:
+
+```sh
+codex plugin marketplace upgrade card-review
+codex plugin add card-review-toolkit@card-review
+```
+
+Use `codex plugin list --json` to verify the installed version is `1.5.1`. Older downloaded ZIPs and previously shared copies do not become new versions merely because this repository changes; use the release above for the current package.
 
 ## Install
 
@@ -31,7 +44,7 @@ The marketplace is at `.agents/plugins/marketplace.json`, and all plugin resourc
 
 See the plugin README for details and the [official packaging documentation](https://developers.openai.com/plugins/build/plugins) for marketplace installation.
 
-## Version 1.1: consistent, faster preparation
+## Earlier release: Version 1.1 — consistent, faster preparation
 
 The proofreader now uses one bundled engine with fixed overlapping card-relative crops, saved geometry, ordered contact sheets, native-pixel details on demand, hash-verified caching, and a coverage completion check. Start with the default grid; all templates cover the full card. Automatic boundary proposals require visual confirmation.
 
